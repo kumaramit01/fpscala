@@ -1,3 +1,5 @@
+import scala.annotation.tailrec
+
 object Chapter3 extends App{
 
 
@@ -71,7 +73,41 @@ object Chapter3 extends App{
     }
 
 
-   }
+    // fold right implementation
+    def foldRight[A,B](as:List[A],z:B)(f:(A,B)=>B):B = as match{
+      case Nil => z
+      case Cons(head,tail) =>  f(head,foldRight(tail,z)(f))
+    }
+
+    // fold right implementation breaks when 0 is present -but still returns
+    // what ever the accumalator has at that moment
+    def breakAblefoldRight(as:List[Int],z:Int)(f:(Int,Int)=>Int):Int ={
+      var breakEarly=false   // <- this doesn't work either... we still get what ever accumalator has
+      as match{
+        case Nil => if(!breakEarly) z else 0
+        case Cons(head,tail) =>  if(head == 0){  breakEarly = true; return 0; } else {f(head,breakAblefoldRight(tail,z)(f)) }
+      }
+
+    }
+     // Ex 3.9
+    def length[A](as:List[A]):Int={
+      foldRight[A,Int](as,0:Int){ (a,b) => b + 1 }
+    }
+
+
+
+    @tailrec
+    def foldLeft[A,B](as:List[A], z:B)(f:(B,A)=>B):B=
+    as match{
+        case Nil => z
+        case Cons(head,tail) => foldLeft(tail, f( z , head ) )(f)
+    }
+
+
+
+
+
+  }
 
 
   val x = List(1,2,3,4,5) match {
@@ -99,5 +135,26 @@ object Chapter3 extends App{
   require(List.init(List(1)) == Nil)
 
 
+  val x1= List.foldRight(List(1,2,3,4),0)(_+_)
+  val x2= List.foldRight(List(1,2,3,4),1)(_*_)
+
+  println(" ===> "+ x1 + " " + x2)
+  // Exercise 3.7
+  val x3 = List.breakAblefoldRight(List(1,2,0,3,4),1)(_+_)
+  println("X3 is: "+ x3)    // 1+2 =3
+
+  // Exercise 3.8
+  // folds replace the Nil of the list with z (default value) and cons with
+  // the function
+  val orignalList = List(1,2,3)
+  val newList= List.foldRight(orignalList, Nil:List[Int])(Cons(_,_))
+
+  // Exercise 3.9
+  val len = List.length[Int](List(1,2,3,7,10))
+  println("Len is: "+ len)
+
+  val x4= List.foldLeft(List(1,2,3,4),0)(_+_)
+
+  println("X4 is: "+ x4);
 
 }
