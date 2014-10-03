@@ -103,6 +103,22 @@ object Chapter3 extends App{
         case Cons(head,tail) => foldLeft(tail, f( z , head ) )(f)
     }
 
+    def reverse[A](as:List[A]):List[A]={
+      @tailrec
+      def _reverse(list:List[A], result:List[A]):List[A]={
+        list match{
+          case Nil => result
+          case Cons(head,tail) =>  _reverse(tail,Cons(head,result))
+        }
+      }
+      _reverse(as,Nil)
+    }
+
+    def reverseUsingFold[A](as:List[A]):List[A]={
+      foldLeft(as, Nil:List[A]){case (a,b) => Cons(b,a)}
+    }
+
+
 
 
 
@@ -156,5 +172,8 @@ object Chapter3 extends App{
   val x4= List.foldLeft(List(1,2,3,4),0)(_+_)
 
   println("X4 is: "+ x4);
+
+
+  println(List.reverse(List[Int](1,2,3,4,5,6)))
 
 }
