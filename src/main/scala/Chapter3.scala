@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.Function
 
 object Chapter3 extends App{
 
@@ -103,6 +104,8 @@ object Chapter3 extends App{
         case Cons(head,tail) => foldLeft(tail, f( z , head ) )(f)
     }
 
+
+    // 3.12
     def reverse[A](as:List[A]):List[A]={
       @tailrec
       def _reverse(list:List[A], result:List[A]):List[A]={
@@ -114,11 +117,31 @@ object Chapter3 extends App{
       _reverse(as,Nil)
     }
 
+    // 3.12
     def reverseUsingFold[A](as:List[A]):List[A]={
       foldLeft(as, Nil:List[A]){case (a,b) => Cons(b,a)}
     }
 
+    // 3.13
+    // foldRight via foldLeft
+    def foldRightUsingFoldLeft[A,B](as:List[A],z:B)(f:(B,A)=>B):B={
+      foldLeft(reverse(as),z)(f)
+    }
 
+
+
+    def appendUsingFold[A](as:List[A], element:A):List[A]={
+       foldRight(as,Cons(element,Nil:List[A]))(Cons(_,_))
+    }
+
+    def appendUsingFold[A](as:List[A], element:List[A]):List[A]={
+      foldRight(as,element)(Cons(_,_))
+    }
+
+    // concatenate List[List[A]] -> List[A]
+    def concatenate[A](as:List[List[A]]):List[A]={
+      foldRight(as,Nil:List[A])(appendUsingFold)
+    }
 
 
 
@@ -175,5 +198,8 @@ object Chapter3 extends App{
 
 
   println(List.reverse(List[Int](1,2,3,4,5,6)))
+
+
+  println("Appended: " + List.appendUsingFold(List[Int](1,2,3,4),5))
 
 }
