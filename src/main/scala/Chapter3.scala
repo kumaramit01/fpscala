@@ -143,6 +143,14 @@ object Chapter3 extends App{
       foldRight(as,Nil:List[A])(appendUsingFold)
     }
 
+    // 3.16 //3.18
+    def map[A,B](as:List[A])(f:(A)=>B):List[B]={
+     as match{
+        case Nil => Nil
+        case Cons(head,tail)=> Cons(f(head),map(tail)(f))
+      }
+    }
+
 
 
 
@@ -197,9 +205,11 @@ object Chapter3 extends App{
   println("X4 is: "+ x4);
 
 
-  println(List.reverse(List[Int](1,2,3,4,5,6)))
 
-
-  println("Appended: " + List.appendUsingFold(List[Int](1,2,3,4),5))
+  require(List.reverse(List[Int](1,2,3,4,5,6)) == List(6,5,4,3,2,1))
+  require( List.appendUsingFold(List[Int](1,2,3,4),5) == List(1,2,3,4,5))
+  require(List.map[Int,Int](List[Int](1,2,3,4))(_+1) == List(2,3,4,5))
+  // 3.17
+  require(List.map[Double,String](List[Double](1.0,2.0,3.0,4.0))(_.toString) == List("1.0","2.0","3.0","4.0"))
 
 }
