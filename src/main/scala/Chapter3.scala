@@ -152,6 +152,29 @@ object Chapter3 extends App{
     }
 
 
+    def filter[A](as:List[A])(f:(A)=>Boolean):List[A]={
+     foldRightUsingFoldLeft(as, Nil:List[A])(
+       (tail, head)=>{
+         if(f(head))
+           Cons(head,tail)
+         else{
+           tail
+         }
+       }
+      )
+    }
+
+    // 3.20
+    def flatMap[A,B](as:List[A])(f:A => List[B]):List[B]={
+      val list:List[List[B]]=
+      as match{
+        case Nil => Nil
+        case Cons(head,tail)=> Cons(f(head),map(tail)(f))
+      }
+
+      concatenate(list)
+    }
+
 
 
   }
@@ -211,5 +234,12 @@ object Chapter3 extends App{
   require(List.map[Int,Int](List[Int](1,2,3,4))(_+1) == List(2,3,4,5))
   // 3.17
   require(List.map[Double,String](List[Double](1.0,2.0,3.0,4.0))(_.toString) == List("1.0","2.0","3.0","4.0"))
+
+  require(List.filter[Double](List[Double](1.0,2.0,3.0,4.0))(_ % 2.0 ==0) == List(2.0,4.0))
+
+  require(List.flatMap[Int,Int](List(1,2,3,4))(element =>{
+      List(1,1)
+    }
+  ) == List(1,1,1,1,1,1,1,1))
 
 }
