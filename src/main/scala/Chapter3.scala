@@ -175,6 +175,29 @@ object Chapter3 extends App{
       concatenate(list)
     }
 
+    // * EX 3.21 -looked up answer
+    def filterUsingFlatMap[A](as:List[A])(f:A =>Boolean):List[A]={
+     flatMap(as)(a => if (f(a)) List(a) else Nil)
+    }
+
+
+    // EX 3.22
+    def accumlate(as:List[Int], ab:List[Int]):List[Int]={
+      (as, ab) match{
+        case (Nil, Nil) => Nil
+        case (Cons(head:Int,tail:List[Int]),Cons(head1:Int,tail1:List[Int])) => Cons((head + head1), accumlate(tail,tail1))
+      }
+    }
+
+    // EX 3.23
+    def zipWith[A](as:List[A], ab:List[A])(f: (A,A)=>A):List[A]={
+      (as, ab) match{
+        case (Nil, Nil) => Nil
+        case (Cons(head:A,tail:List[A]),Cons(head1:A,tail1:List[A])) => Cons(f(head ,head1), zipWith(tail,tail1)(f))
+      }
+    }
+
+
 
 
   }
@@ -241,5 +264,8 @@ object Chapter3 extends App{
       List(1,1)
     }
   ) == List(1,1,1,1,1,1,1,1))
+
+  require(List.accumlate(List(1,2,3), List(4,5,6)) == List(5,7,9))
+  require(List.zipWith(List(1,2,3), List(4,5,6))(_*_) == List(4,10,18))
 
 }

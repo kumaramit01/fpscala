@@ -122,9 +122,9 @@ object Chapter10 {
 
 
     // EX 10.7 -balanced foldMap
-    def foldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
+    /*def foldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
 
-    }
+    }*/
 
 
 
