@@ -1,5 +1,5 @@
 
-object Chapter4 {
+object Chapter4 extends App{
 
   // exceptions break Referential integrity
   // exceptions causes context dependencies
@@ -77,9 +77,27 @@ object Chapter4 {
   }
 
   // EX 4.4
-  //def sequence[A](a:List[Option[A]]):Option[List[A]]={
+  def sequence[A](as:List[Option[A]]):Option[List[A]]={
 
-  //}
+    as match{
+        // this case statement terminates the List
+      case Nil => Some(Nil)
+        // get the headOption of the list
+        // flatMap the head -if it is None, the recursion stops
+        // and it returns None, if it is Some(element), call
+        // sequence on the rest of the tail and attach the head value
+        // to the result using map
+      case headOpt::tail =>{
+        headOpt flatMap{ head => sequence(tail) map (head :: _)}
+
+      }
+    }
+
+  }
+
+  require(sequence[Int](List(Some(1), Some(2))) == Some(List(1,2)))
+  require(sequence[Int](List(Some(1),None ,Some(2))) == None)
+
 
 
 }
