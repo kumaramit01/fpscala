@@ -61,6 +61,17 @@ object Chapter10 {
   }
 
 
+  //EX 10.7 -balanced foldMap
+  def foldMapIndexedSeq[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
+    as match{
+      case as if(as.length==0) => m.zero
+      case as if(as.length==1) => f(as(0))
+      case as =>  {
+        val (left,right)=as.splitAt(as.length/2)
+        m.op(foldMapIndexedSeq(left,m)(f), foldMapIndexedSeq(right,m)(f))
+      }
+    }
+  }
 
   def main(args:Array[String]):Unit={
     val add = new IntAdditionMonoid
@@ -121,20 +132,9 @@ object Chapter10 {
     */
 
 
-    //EX 10.7 -balanced foldMap
-  def foldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
-    as match{
-      case as if(as.length==0) => m.zero
-      case as if(as.length==1) => f(as(0))
-      case as =>  {
-        val (left,right)=as.splitAt(as.length/2)
-        m.op(foldMap(left,m)(f), foldMap(right,m)(f))
-      }
-    }
-    }
 
 
-
+    require(foldMapIndexedSeq[String,Int](IndexedSeq("1","2","3","4","5"), new IntAdditionMonoid)(_.toInt)==15)
 
 
 
