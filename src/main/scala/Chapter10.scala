@@ -73,6 +73,30 @@ object Chapter10 {
     }
   }
 
+  sealed trait WC
+  case class Stub(chars: String) extends WC
+  case class Part(lStub:String, words:Int, rStub:String) extends WC
+
+
+
+  def wcMonoid:Monoid[WC] = new Monoid[WC] {
+    // the operation op should satisfy the associativity i.e. op(op(a,b),c) = op(a,op(b,c))
+    def op(a1: WC, a2: WC): WC = {
+      (a1,a2) match{
+        case (Stub(a), Stub(b)) => Stub(a+b)
+        case (Stub(a), Part(lStub,words,rStub)) => Part(a+lStub,words,rStub)
+        case ( Part(lStub,words,rStub), Stub(b)) => Part(lStub,words,rStub+b)
+        // this is where the rStub and lStub1 might be combined
+        case ( Part(lStub,words,rStub), Part(lStub1,words1,rStub1)) => Part(lStub,words+ words1 +
+          (if((rStub+lStub1).length>0) 1 else 0),rStub1)
+      }
+    }
+   // zero or identity function should satisfy op(a,zero) == a
+    def zero: WC = Stub("")
+  }
+
+
+
   def main(args:Array[String]):Unit={
     val add = new IntAdditionMonoid
     require(add.op(add.op(1,2),3) == add.op(1,add.op(2,3)))
@@ -133,8 +157,14 @@ object Chapter10 {
 
 
 
-
+    // 10.7
     require(foldMapIndexedSeq[String,Int](IndexedSeq("1","2","3","4","5"), new IntAdditionMonoid)(_.toInt)==15)
+
+
+    require(wcMonoid.op(Stub("a"), Stub("b")) == Stub("ab"))
+    require(wcMonoid.op(Stub("a"), Part("b", 1, "c")) == Part("ab",1,"c"))
+    require(wcMonoid.op( Part("b", 1, "c"),Stub("a")) == Part("b",1,"ca"))
+    require(wcMonoid.op(Part("a", 1, "d"), Part("b", 1, "c")) == Part("a",3,"c"))
 
 
 
