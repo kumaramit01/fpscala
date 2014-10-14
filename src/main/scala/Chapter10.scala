@@ -121,10 +121,17 @@ object Chapter10 {
     */
 
 
-    // EX 10.7 -balanced foldMap
-    /*def foldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
-
-    }*/
+    //EX 10.7 -balanced foldMap
+  def foldMap[A,B](as: IndexedSeq[A], m: Monoid[B])(f: A => B): B={
+    as match{
+      case as if(as.length==0) => m.zero
+      case as if(as.length==1) => f(as(0))
+      case as =>  {
+        val (left,right)=as.splitAt(as.length/2)
+        m.op(foldMap(left,m)(f), foldMap(right,m)(f))
+      }
+    }
+    }
 
 
 
