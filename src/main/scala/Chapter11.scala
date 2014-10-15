@@ -14,7 +14,8 @@ object Chapter11 {
    *
    * A functor transforms one category into another category.
    *
-   * Functor is a generalization of map
+   * Functor is a generalization of map, they maintain the shape
+   * of the container.
    *
    */
 
@@ -38,9 +39,18 @@ object Chapter11 {
         case Right(fa) =>map(fa)(Right(_))
      }
     }
+  }
 
 
-
+  trait Monad[F[_]] extends Functor[F]{
+    def unit[A](a: => A):F[A]
+    def map[A,B](fa:F[A])(f:A=>B):F[B] ={
+      flatMap(fa)(a=>unit(f(a)))
+    }
+    def flatMap[A,B](fa:F[A])(f:A=>F[B]):F[B]
+    def map2[A,B,C](fa:F[A], fb:F[B])(f:(A,B)=>C):F[C]={
+      flatMap(fa) (a => map(fb) (b => f(a,b)))
+    }
 
   }
 
