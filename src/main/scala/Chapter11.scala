@@ -54,4 +54,21 @@ object Chapter11 {
 
   }
 
+
+  // EX 11.1
+  // Stream, List and Gen would be similar
+  def optionMonad = new Monad[Option]{
+    def unit[A](a: => A): Option[A] = Some(a)
+
+    //def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = fa flatMap(f)
+
+    // other
+    def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = fa match{
+      case None => None
+      case Some(a) => f(a)
+    }
+
+
+  }
+
 }
