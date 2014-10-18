@@ -88,7 +88,7 @@ object Chapter4 extends App{
         // sequence on the rest of the tail and attach the head value
         // to the result using map
       case headOpt::tail =>{
-        headOpt flatMap{ head => sequence(tail) map (head :: _)}
+        headOpt flatMap { head:A => sequence(tail) map (head :: _)}
 
       }
     }
