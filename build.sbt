@@ -15,7 +15,7 @@ resolvers ++= Seq(
 )
 
 
-libraryDependencies += "org.scalaz" % "scalaz-core_2.11" % "7.1.0"
+libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.1.0"
 
-//libraryDependencies += "org.scalaz" % "scalaz-core" % "7.1.0"
+libraryDependencies += "org.scalaz" %% "scalaz-iteratee" % "7.1.0"
 
