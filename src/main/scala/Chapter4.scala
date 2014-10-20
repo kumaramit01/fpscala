@@ -99,5 +99,65 @@ object Chapter4 extends App{
   require(sequence[Int](List(Some(1),None ,Some(2))) == None)
 
 
+  // Exercise 4.6
+  sealed trait Either[+E,+A]{
+    def map[B](f: A=>B): Either[E,B]={
+      this match{
+        case Left(e)=> Left(e)
+        case Right(a) =>  Right(f(a))
+      }
+    }
+    // Lookup: When mapping over the right side, we must promote the left type
+    // parameter to some supertype, to satisfy the +E variance annotation.
+    def flatMap[EE >: E, B](f:A=>Either[EE,B]):Either[EE,B]={
+      this match {
+        case Left(e)=> Left(e)
+        case Right(a)=> f(a)
+      }
+
+    }
+
+    def orElse[EE >: E,B >: A](b: => Either[EE, B]): Either[EE, B]={
+       this match {
+         case Left(e)=> b
+         case Right(a)=> this
+       }
+    }
+
+    def map2[EE >: E, B, C](b: Either[EE, B])(f: (A, B) => C):Either[EE, C] ={
+      this match{
+        case Left(e)=> Left(e)
+        case Right(a) => b match{
+          case Left(ee) => Left(ee)
+          case Right(b) => Right(f(a,b))
+        }
+      }
+    }
+
+
+  }
+  case class Left[+E](value:E) extends Either[E,Nothing]
+  case class Right[+A](value:A) extends Either[Nothing,A]
+
+
+  def Try[A](a: => A):Either[Exception,A]={
+   try Right(a)
+    catch {case e:Exception => Left(e)}
+  }
+
+  //4.7
+  def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]]={
+    def step(as:List[Either[E,A]]):Either[E,List[A]]={
+      as match{
+        case Left(head:E)::tail =>Left(head)
+        case Right(head)::tail => step(tail)
+      }
+    }
+
+    step(es)
+  }
+
+
+
 
 }
