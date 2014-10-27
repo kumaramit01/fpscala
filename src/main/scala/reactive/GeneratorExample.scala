@@ -18,8 +18,7 @@ object GeneratorExample {
   }
 
   val integers = new Generator[Int] {
-    val rand = new java.util.Random
-    def generate: Int = rand.nextInt()
+    def generate: Int = scala.util.Random.nextInt()
   }
 
   val booleans = new Generator[Boolean] {
@@ -36,6 +35,39 @@ object GeneratorExample {
     y <- u
   } yield(x,y)
 
+
+  def main(args:Array[String])={
+    println(pairsImproved[Boolean,Int](booleans,integers))
+    println(lists)
+  }
+
+  def Single[T](x:T) = new Generator[T] {
+    // an alias for this
+    def generate: T = x
+  }
+
+  def choose (lo:Int, hi:Int):Generator[Int]={
+   for (x <- integers)
+      yield lo + x % (hi-lo)
+   }
+
+  def oneOf[T](xs:T*): Generator[T]={
+    for (idx <- choose(0, xs.length))
+      yield xs(idx)
+  }
+
+
+  def lists:Generator[List[Int]] = for {
+    isEmpty <- booleans
+    list <- if(isEmpty) emptyLists else nonEmptyLists
+  } yield list
+
+  def emptyLists = Single(Nil)
+
+  def nonEmptyLists = for {
+    head <- integers
+    tail <- lists
+  } yield head :: tail
 
 
 
