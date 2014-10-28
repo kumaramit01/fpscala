@@ -1,3 +1,4 @@
+import _root_.Step.{Done, Cont}
 
 object IterateeContract {
   // Enumerator is a producer of the data
@@ -45,12 +46,16 @@ object IterateeContract {
   case object Empty extends Input[Nothing]
 
 
-  // States of the consumer
-  sealed trait Step[E, +A]
 
-  object Step{
-    case class Done[E,+A](state:A, remaining:Input[E]) extends Step[E,A]
-    case class Cont[E,+A](k:Input[E] => Iteratee[E,A]) extends Step[E,A]
+
+  def counter[E]: Iteratee[E, Int] = {
+    def step(count: Int): Input[E] => Iteratee[E, Int] = {
+      case El(e) => Cont(step(count + 1))
+      case EOF => Done(count, EOF)
+      case Empty => Cont(step(count))
+    }
+    Cont(step(0))
   }
+
 
 }
