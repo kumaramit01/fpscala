@@ -1,4 +1,4 @@
-import _root_.IterateeContract.{Input, Iteratee}
+//import _root_.IterateeContract.{Input, Iteratee}
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import _root_.IterateeContract.{Input, Iteratee}
  */
 // States of the consumer
 sealed trait Step[E, +A]
-
+ /*
 object Step{
   case class Done[E,+A](state:A, remaining:Input[E]) extends Step[E,A]  with Iteratee[E,A]{
     def fold[B](folder: (Step[E, A]) => B): B = folder(this)
@@ -38,4 +38,5 @@ object Step{
 
     def map[B](f: (A) => B): Iteratee[E, B] = ???
   }
-}
+
+} */

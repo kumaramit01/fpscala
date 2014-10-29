@@ -176,14 +176,14 @@ object Chapter10 {
 
     }
 
-    def listFoldable = new Foldable[List] {
+    /*def listFoldable = new Foldable[List] {
       def foldRight[A, B](as: List[A])(z: B)(f: (A, B) => B): B = as.foldRight(z)(f)
 
       def foldLeft[A, B](as: List[A])(z: B)(f: (B, A) => B): B = as.foldLeft(z)(f)
 
      //def foldMap[A, B](as: List[A])(f: (A) => B)(mb: Monoid[A]): B =   foldLeft(as)(mb.zero)((b, a) => mb.op(b, f(a)))
     }
-
+     */
 
   }
 

@@ -37,9 +37,9 @@ object GeneratorExample {
 
 
   def main(args:Array[String])={
-    println(pairsImproved[Boolean,Int](booleans,integers))
-    println(lists)
-    println(tree)
+    println(pairsImproved[Boolean,Int](booleans,integers).generate)
+    println(lists.generate)
+    println(trees.generate)
   }
 
   def Single[T](x:T) = new Generator[T] {
@@ -69,17 +69,20 @@ object GeneratorExample {
     tail <- lists
   } yield head :: tail
 
-  trait Tree[T]
-  case class Leaf[T](a:T) extends Tree[T]
-  case class Inner[T](a:T,left:Tree[T], right:Tree[T]) extends Tree[T]
+  trait Tree
+  case class Leaf(a:Int) extends Tree
+  case class Inner(left:Tree, right:Tree) extends Tree
 
 
-  def leaf= Leaf[Int](integers.generate)
-  def inner:Tree[Int] = Inner[Int](integers.generate,if(isLeaf) leaf else inner, if(isLeaf) leaf else inner)
+  def leafs:Generator[Leaf]= for { x <- integers } yield Leaf(x)
 
-  def isLeaf = booleans.generate
+  def inners:Generator[Inner] = for { l <- trees; r <- trees} yield Inner(l,r)
 
-  def tree = inner
+
+  def trees:Generator[Tree] = for {
+    isLeaf <- booleans
+    tree <- if(isLeaf) leafs else inners
+  } yield tree
 
 
 

@@ -1,4 +1,3 @@
-import _root_.Step.{Done, Cont}
 
 object IterateeContract {
   // Enumerator is a producer of the data
@@ -10,7 +9,7 @@ object IterateeContract {
   // this is more scalable then consumer pulling data as the consumer would be blocked
   // when data is not available
 
-
+  /*
 
   // Consumer
   trait Iteratee[E,+A]{
@@ -56,6 +55,6 @@ object IterateeContract {
     }
     Cont(step(0))
   }
-
+                    */
 
 }
