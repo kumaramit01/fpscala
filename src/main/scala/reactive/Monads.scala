@@ -36,7 +36,7 @@ object Monads {
   // Right unit law says for(x <- m) yield x == m
 
 
-  /*
+ /*
   abstract class Try[+T]
   case class Success[T](x:T) extends Try[T]
   case class Failure(ex:Exception) extends Try[Nothing]
@@ -49,8 +49,29 @@ object Monads {
     }
   }
 
-*/
+  for {
+  x <- computeX
+  y <- computeY
+               } yield f(x,y)
 
+
+
+  abstract class Try[T]{
+    def flatMap[U](f:T => Try[U]):Try[U]= this match{
+      case Success(x) => try f(x) catch {case NonFatal(ex) => Failure(ex)}
+      case fail:Failure => fail
+    }
+    def map[U](f:T=>U):Try[U]= this match {
+      case Success(x) => Try(f(x))
+      case fail:Failure => fail
+    }
+
+  }
+  // the map can be written as flatMap
+  t map f == t flatMap (x => Try(f(x)))
+          == t flatMap (f andThen Try)
+
+   */
 
 
 }
